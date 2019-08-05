@@ -293,7 +293,7 @@ export default class App extends Component {
   }
 
   signUpUser = () => {
-    fetch("http://localhost:3000/api/v1/users", {
+    fetch("http://localhost:5000/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -367,7 +367,7 @@ export default class App extends Component {
   }
 
   getHistoricalCoinPrices = () => {
-    fetch("http://localhost:3000/api/v1/cryptos")
+    fetch("http://localhost:5000/api/cryptos")
       .then(res => res.json())
       .then(coinData => this.setState({historicalPrices: coinData}))
   }
