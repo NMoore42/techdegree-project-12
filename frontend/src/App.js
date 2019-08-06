@@ -248,6 +248,7 @@ export default class App extends Component {
         for (let key in res.coins) {
           newCoins[key] = res.coins[key]
         }
+        debugger
         this.setState({
         loggedIn: true,
         user: res.user.name,

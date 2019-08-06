@@ -12,29 +12,33 @@ const User = require('../models/user');
 const groupBy = (collection, iteratee = (x) => x) => {
   const it = typeof iteratee === 'function' ?
     iteratee : ({ [iteratee]: prop }) => prop;
-
   const array = Array.isArray(collection) ? collection : Object.values(collection);
-
   return array.reduce((r, e) => {
     const k = it(e);
-
     r[k] = r[k] || [];
-
     r[k].push(e);
-
     return r;
   }, {});
 };
 
-// const getUserCoins = (user_id) => {
-//   let transObj = groupBy(Transaction.find({user_id: user_id}), obj => Crypto.find({obj.crypto_id}).name)
-//   let myCurrencies = {}
-//   for (let obj in transObj) {
-//
-//   }
-//
-// }
-//
+const getUserCoins = (user_id) => {
+  let myCurrencies = {}
+  Transaction.find({user_id: user_id}, (err, transactions) => {
+    let transObj = groupBy(transactions, obj => obj.coin)
+    for (let obj in transObj) {
+      let qty = transObj[obj]
+      qty = qty.map(value => value.quantity)
+      myCurrencies[obj] = qty.reduce((acc, cur) => acc + cur)
+    }
+    console.log(myCurrencies)
+    return myCurrencies
+  })
+}
+
+
+
+
+
 // def self.get_user_coins(id)
 //     transHash = Transaction.all.where(user_id: id).group_by {|trx| Crypto.find(trx.crypto_id).name}
 //     mycurrencies = {}
@@ -72,15 +76,24 @@ const groupBy = (collection, iteratee = (x) => x) => {
 //POST /login
 router.post('/login', function(req, res, next) {
   if (req.body.email && req.body.password) {
+    let myCurrencies = {}
     User.authenticate(req.body.email, req.body.password, (error, user) => {
       if (error || !user) {
         const err = new Error('Wrong email or password.');
         err.status = 401;
         return next(err);
       } else {
-        //req.session.userId = user._id;
-        // let coins = Transaction.
-        res.json({user: user, transactions: [], coins: [], articles: []})
+        Transaction.find({user_id: user._id}, (err, transactions) => {
+          let transObj = groupBy(transactions, obj => obj.coin)
+          for (let obj in transObj) {
+            let qty = transObj[obj]
+            qty = qty.map(value => value.quantity)
+            myCurrencies[obj] = qty.reduce((acc, cur) => acc + cur)
+          }
+          Article.find({user_id: user._id}, (err, articles) => {
+            res.json({user: user, transactions: transactions, coins: myCurrencies, articles: articles})
+          })
+        })
       }
     });
   } else {
