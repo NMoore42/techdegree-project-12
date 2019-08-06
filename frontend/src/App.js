@@ -106,7 +106,7 @@ export default class App extends Component {
   }
 
   handleArticleSave = (articleData, coinKey) => {
-    fetch("http://localhost:3000/api/v1/articles", {
+    fetch("http://localhost:5000/api/articles", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +122,7 @@ export default class App extends Component {
   }
 
   handleArticleRemove = (articleData, coinImgKey) => {
-    fetch("http://localhost:3000/api/v1/articlesdelete", {
+    fetch("http://localhost:5000/api/articlesdelete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -134,7 +134,7 @@ export default class App extends Component {
       })
     }).then(res => res.json())
       .then(res => this.setState({
-        userArticles: this.state.userArticles.filter(art => art.url !== res.url)
+        userArticles: this.state.userArticles.filter(art => art.url !== articleData.url)
       })
     )
   }
@@ -167,7 +167,7 @@ export default class App extends Component {
 
   createNewTransaction = () => {
     const coinSelect = this.state.historicalPrices
-    fetch("http://localhost:3000/api/v1/transactions", {
+    fetch("http://localhost:5000/api/transactions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export default class App extends Component {
       },
       body: JSON.stringify({
         user_id: this.state.userId,
-        crypto_id: coinSelect[this.state.newTransCrypto][coinSelect[this.state.newTransCrypto].length-1].id,
+        crypto_id: coinSelect[this.state.newTransCrypto][coinSelect[this.state.newTransCrypto].length-1]._id,
         quantity: (this.state.newTransQuantity * this.state.newTransType),
         coin: this.state.newTransCrypto
       })
@@ -252,7 +252,7 @@ export default class App extends Component {
         loggedIn: true,
         user: res.user.name,
         coins: newCoins,
-        userId: res.user.id,
+        userId: res.user._id,
         transactions: res.transactions,
         userArticles: res.articles,
         email: res.user.email,
@@ -272,7 +272,7 @@ export default class App extends Component {
   }
 
   handleDeleteProfile = () => {
-    fetch(`http://localhost:3000/api/v1/users/${this.state.userId}`)
+    fetch(`http://localhost:5000/api/users/${this.state.userId}`)
       .then(res => res.json())
       .then(res => this.logOut())
   }
@@ -317,7 +317,7 @@ export default class App extends Component {
           loggedIn: true,
           user: res.user.name,
           coins: newCoins,
-          userId: res.user.id,
+          userId: res.user._id,
           transactions: res.transactions,
           userArticles: res.articles,
           email: res.user.email,

@@ -92,7 +92,6 @@ router.post('/login', function(req, res, next) {
 
 //POST /users
 router.post("/users", (req, res, next) => {
-  console.log(req.body)
   const user = new User(req.body);
   user.save( (err, user) => {
     if (err) return next(err);
@@ -101,22 +100,42 @@ router.post("/users", (req, res, next) => {
   });
 });
 
-
-/////////  ARTICLE ROUTES  ///////////
-
-router.get('/articles', function(req, res, next) {
-  Article.find({user_id: req.user_id}, (err, articles) => {
+//DELETE /users/:id
+router.get('/users/:id', function(req, res, next) {
+  User.remove({_id: req.params.id}, (err, user) => {
     if (err) {
       return next(err)
     } else {
       res.status(200)
-      res.json(articles)
+      res.json(user)
     }
   })
 });
 
-// POST
-// DELETE
+
+/////////  ARTICLE ROUTES  ///////////
+
+//POST /articles
+router.post('/articles', function(req, res, next) {
+  const article = new Article(req.body);
+  article.save( (err, article) => {
+    if (err) return next(err);
+    res.status(201);
+    res.json(article);
+  });
+});
+
+//POST /articlesdelete
+router.post('/articlesdelete', function(req, res, next) {
+  Article.remove({user_id: req.body.user_id, url: req.body.url}, (err, article) => {
+    if (err) {
+      return next(err)
+    } else {
+      res.status(200)
+      res.json(article)
+    }
+  })
+});
 
 
 /////////  CRYPTO ROUTES  ///////////
@@ -133,5 +152,20 @@ router.get('/cryptos', function(req, res, next) {
     }
   })
 });
+
+
+/////////  TRANSACTION ROUTES  ///////////
+
+//POST /transactions
+router.post('/transactions', function(req, res, next) {
+  const transaction = new Transaction(req.body);
+  transaction.save( (err, transaction) => {
+    if (err) return next(err);
+    res.status(201);
+    res.json(transaction);
+  });
+});
+
+
 
 module.exports = router;
