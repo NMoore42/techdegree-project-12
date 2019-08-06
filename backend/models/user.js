@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 
 const UserSchema = new mongoose.Schema({
@@ -22,6 +23,41 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+});
+
+
+
+//Authenticate input against database docs
+UserSchema.statics.authenticate = function(email, password, callback) {
+  User.findOne({ email: email})
+    .exec( (error, user) => {
+      if (error) {
+        return callback(error);
+      } else if (!user) {
+        var err = new Error("User not found");
+        err.status = 401;
+        return callback(err);
+      }
+      bcrypt.compare(password, user.password, (error, result) => {
+        if (result === true) {
+          return callback(null, user);
+        } else {
+          return callback();
+        }
+      })
+    })
+};
+
+//Has password before saving
+UserSchema.pre('save', function(next) {
+  var user = this;
+  bcrypt.hash(user.password, 10, (err, hash) => {
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  });
 });
 
 

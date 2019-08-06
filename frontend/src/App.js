@@ -230,7 +230,7 @@ export default class App extends Component {
   }
 
   loginUser = () => {
-    fetch("http://localhost:3000/api/v1/login", {
+    fetch("http://localhost:5000/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
