@@ -9,6 +9,7 @@ An asset overview tool providing real-time data on personalized cryptocurrency p
 
 
 /////// HISTORICAL CRYPTOCURRENCY DATA NOTES /////////
+
 Initially, my intention was to include Coin Market Cap as a third API to serve historical data.  However, Coin Market Cap limits their free API to exclude this information.  Because of this, the historical data will need to be manually seeded from the seed-data folder provided and will not actually reflect current market prices.
 
 
