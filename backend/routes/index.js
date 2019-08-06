@@ -4,10 +4,10 @@ const Crypto = require('../models/crypto');
 const Article = require('../models/article');
 const Transaction = require('../models/transaction');
 const User = require('../models/user');
-//const mid = require('../middleware');
 
-
+/////////////////////////////////////
 ///////// ROUTE FUNCTIONS //////////
+///////////////////////////////////
 
 const groupBy = (collection, iteratee = (x) => x) => {
   const it = typeof iteratee === 'function' ?
@@ -21,57 +21,10 @@ const groupBy = (collection, iteratee = (x) => x) => {
   }, {});
 };
 
-const getUserCoins = (user_id) => {
-  let myCurrencies = {}
-  Transaction.find({user_id: user_id}, (err, transactions) => {
-    let transObj = groupBy(transactions, obj => obj.coin)
-    for (let obj in transObj) {
-      let qty = transObj[obj]
-      qty = qty.map(value => value.quantity)
-      myCurrencies[obj] = qty.reduce((acc, cur) => acc + cur)
-    }
-    console.log(myCurrencies)
-    return myCurrencies
-  })
-}
 
-
-
-
-
-// def self.get_user_coins(id)
-//     transHash = Transaction.all.where(user_id: id).group_by {|trx| Crypto.find(trx.crypto_id).name}
-//     mycurrencies = {}
-//     transHash.each do |name, values|
-//       qty = values.map do |value|
-//         value.quantity
-//       end
-//       mycurrencies[name] = qty.reduce(:+)
-//     end
-//     mycurrencies
-//   end
-
-// for (var property1 in object1) {
-//   string1 += object1[property1];
-// }
-
+////////////////////////////////////
 /////////  USER ROUTES  ///////////
-
-//GET /users
-
-// def login
-//   email = params[:email]
-//   password = params[:password]
-//   @user = User.all.find_by(email: email, password: password)
-//   if @user
-//     @coins = Transaction.get_user_coins(@user.id)
-//     @transactions = @user.transactions.reverse
-//     @articles = @user.articles
-//     render json: {user: @user, coins: @coins, transactions: @transactions, articles: @articles}
-//   else
-//     @errors = ["Invalid credentials, please try again"]
-//     render json: @errors
-//   end
+ /////////////////////////////////
 
 //POST /login
 router.post('/login', function(req, res, next) {
@@ -79,7 +32,7 @@ router.post('/login', function(req, res, next) {
     let myCurrencies = {}
     User.authenticate(req.body.email, req.body.password, (error, user) => {
       if (error || !user) {
-        const err = new Error('Wrong email or password.');
+        const err = new Error('Invalid credentials, please try again');
         err.status = 401;
         return next(err);
       } else {
@@ -97,7 +50,7 @@ router.post('/login', function(req, res, next) {
       }
     });
   } else {
-    var err = new Error('Email and Password are required.');
+    const err = new Error('Invalid credentials, please try again');
     err.status = 400;
     return next(err);
   }
@@ -126,7 +79,9 @@ router.get('/users/:id', function(req, res, next) {
 });
 
 
+///////////////////////////////////////
 /////////  ARTICLE ROUTES  ///////////
+/////////////////////////////////////
 
 //POST /articles
 router.post('/articles', function(req, res, next) {
@@ -151,9 +106,9 @@ router.post('/articlesdelete', function(req, res, next) {
 });
 
 
+//////////////////////////////////////
 /////////  CRYPTO ROUTES  ///////////
-
-
+////////////////////////////////////
 
 router.get('/cryptos', function(req, res, next) {
   Crypto.find({}, (err, cryptos) => {
@@ -167,7 +122,9 @@ router.get('/cryptos', function(req, res, next) {
 });
 
 
+///////////////////////////////////////////
 /////////  TRANSACTION ROUTES  ///////////
+/////////////////////////////////////////
 
 //POST /transactions
 router.post('/transactions', function(req, res, next) {
@@ -178,7 +135,6 @@ router.post('/transactions', function(req, res, next) {
     res.json(transaction);
   });
 });
-
 
 
 module.exports = router;

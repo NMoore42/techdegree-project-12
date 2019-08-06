@@ -42,12 +42,6 @@ app.get('/', (req, res) => {
   });
 });
 
-
-// uncomment this route in order to test the global error handler
-// app.get('/error', function (req, res) {
-//   throw new Error('Test error');
-// });
-
 // send 404 if no other route matched
 app.use((req, res) => {
   res.status(404).json({

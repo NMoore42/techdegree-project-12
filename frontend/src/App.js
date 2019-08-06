@@ -241,14 +241,13 @@ export default class App extends Component {
         password: this.state.loginPassword
       })
     }).then(res => res.json()).then(res => {
-      if (res[0] === "Invalid credentials, please try again") {
-        alert(res[0])
+      if (res.message === "Invalid credentials, please try again") {
+        alert(res.message)
       } else {
         let newCoins = Object.assign({}, this.state.coins)
         for (let key in res.coins) {
           newCoins[key] = res.coins[key]
         }
-        debugger
         this.setState({
         loggedIn: true,
         user: res.user.name,
@@ -340,12 +339,10 @@ export default class App extends Component {
     this.getNewsArticles();
 
     this.interval = setInterval(this.getCurrentCoinPrices, 60000);
-    //Remove comment on above when running live demo to live update prices
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
-    //Remove comment on above when running live demo to live update prices
   }
 
   getDate = () => {
