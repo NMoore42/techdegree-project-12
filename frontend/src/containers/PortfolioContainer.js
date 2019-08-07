@@ -46,7 +46,7 @@ export default function CoinContainer(props) {
               <h6>As of {new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</h6>
             </Box>
             <Box m={-5}>
-              <h1 style={{fontSize: "100px"}}>${calcPortfolioBalance(props)}</h1>
+              <h1 style={{fontSize: "100px"}}>${calcPortfolioBalance(props).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h1>
             </Box>
           </Paper>
         </Grid>

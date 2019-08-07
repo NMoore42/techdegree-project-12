@@ -32,7 +32,7 @@ function get7DayAvgPrice(props) {
   let priceArr = props.appState.historicalPrices[props.appState.mainPage]
   let avgPrice = 0
   priceArr.forEach(obj => avgPrice += obj.price)
-  return (avgPrice/7).toFixed(2)
+  return (avgPrice/7).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 function createArticleCards(props) {
@@ -84,7 +84,7 @@ export default function CoinContainer(props) {
           <Paper className={classes.paperCard}>
             Current Price
             <Box m={-1}>
-              <h1>${props.appState.currentPrices[props.appState.mainPage]}</h1>
+              <h1>${props.appState.currentPrices[props.appState.mainPage].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h1>
             </Box>
           </Paper>
         </Grid>
